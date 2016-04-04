@@ -1,0 +1,158 @@
+<html>
+<head>
+	<title>Ultimate Tic-Tac-Toe</title>
+	<h1>Ultimate Tic-Tac-Toe</h1>
+	<p>The blue box shows where to put the current element<br>
+		if it's not present then you can put where-ever you want 
+	</p>
+	<style type="text/css">
+		body { text-align: center; }
+        div { display: inline-block; }
+		.grid { padding: 5px; border:background-color: white; border-radius: 10px;}
+		.button { background-color:  #A0A0A0 ; width: 25px; height: 25px; margin: 5px;
+                  text-align: center; vertical-align: middle; font-size: 25px; }
+	</style>
+	<script type="text/javascript">
+	//X ka official color is #FF3300 and O ka official color is black
+			var winningCombinations;
+			var painted;
+			var content;
+			var isXTurn = true;
+			var num=1;
+			var bluepresent;//tells whether a blue is present or not
+			var grid;//stores the position in the nine grids
+			var gridFilled;//if this is 9 and no victory then its a draw
+			var next="grid"+num;//storing the id of the div in which action is to be performed
+			for (var i=1;i<=9;i++) {
+				document.write('<div class="grid" id="grid' + i + '">');
+					
+			for (var j=1;j<=9;j++) {
+				document.write('<div class="button" id="' + i + j +'" onclick="func('+i+j+')"></div>');
+                    if (j % 3 == 0) {
+                        document.write('<br />');
+                    }
+			}
+			document.write('</div>&nbsp&nbsp&nbsp');
+			if (i % 3 == 0) {
+					document.write('<br /><br/>');
+				}		
+			}
+
+		window.onload=function(){
+			bluepresent=false;
+			painted = new Array(9);
+			content = new Array(9);
+			grid=new Array(9);
+			winningCombinations = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+			for(var i = 0; i <= 8; i++){
+				painted[i]=new Array(9);
+				content[i]=new Array(9);
+				grid[i]='';
+			}
+			for(var i = 0; i <= 8; i++){
+				for(var j = 0; j <= 8; j++){
+					painted[i][j] = false;
+					content[i][j]='';
+				}			
+			}
+		}
+		function func(i){
+			var me = isXTurn ? 'X' : 'O';
+			var parent=Math.floor(i/10)-1;//value of parent
+			var par=Math.floor(i/10);//id of parent
+			par="grid"+par;	
+			var	position= (i%10)-1;//value of position		
+			var pos=parseInt(position)+1;
+			if(document.getElementById(i).innerHTML!=''){alert('THAT SPACE IS ALREADY OCCUPIED WITH YOUR HEART!');return;}
+			
+			// alert(bluepresent);
+			if(bluepresent==false){			
+				// alert('bluepresent is false');		
+					if(isXTurn){
+						document.getElementById(i).style.color='red';
+					}
+					document.getElementById(i).innerHTML=me;
+					next="grid"+pos;	
+					// alert('came');
+				
+					isXTurn=!isXTurn;
+					painted[parent][position]=true;
+					content[parent][position]=me;
+					if(document.getElementById(par).style.backgroundColor !='black' 
+					&& document.getElementById(par).style.backgroundColor !='red'){
+						if(checkForWinners(me,parent)==1){document.getElementById(par).style.backgroundColor = 'black';grid[parent]='O';}
+						if(checkForWinners(me,parent)==2){document.getElementById(par).style.backgroundColor = 'red';grid[parent]='X';}
+					}
+					if(document.getElementById(next).style.backgroundColor !='black' 
+					&& document.getElementById(next).style.backgroundColor !='red'){
+						document.getElementById(next).style.backgroundColor='blue';
+						bluepresent=true;
+					}
+					if(checkForWinners(me,-1)!=-1){alert(me+'YOU WON');playAgain();}
+		
+			}
+			else {
+				if(document.getElementById(par).style.backgroundColor!='blue'){}//if color is not blue do nothing
+				else{
+					if(document.getElementById(next).style.backgroundColor=='blue')document.getElementById(next).style.backgroundColor = 'white';
+					if(isXTurn){
+						document.getElementById(i).style.color='red'
+					}
+					document.getElementById(i).innerHTML=me;			
+
+					next="grid"+pos;
+					
+				
+					isXTurn=!isXTurn;
+					painted[parent][position]=true;
+					content[parent][position]=me;
+					if(document.getElementById(par).style.backgroundColor !='black' 
+					&& document.getElementById(par).style.backgroundColor !='red'){
+						if(checkForWinners(me,parent)==1){document.getElementById(par).style.backgroundColor = 'black';grid[parent]='O';}
+						if(checkForWinners(me,parent)==2){document.getElementById(par).style.backgroundColor = 'red';grid[parent]='X';}
+						
+					}
+					if(document.getElementById(next).style.backgroundColor !='black' 
+					&& document.getElementById(next).style.backgroundColor !='red'){
+						document.getElementById(next).style.backgroundColor='blue';
+					}
+					else{
+					bluepresent=false;
+					// alert('happening');
+					}
+					if(checkForWinners(me,-1)!=-1){alert(me+'	YOU WON');playAgain();}
+				}
+			}
+		}
+		function checkForWinners(symbol,parent){
+
+				// var acontent= new Array(9);
+				if(parent==-1){var acontent=grid;}
+				else{var acontent=content[parent];}
+				// alert(acontent);
+				for(var a = 0; a < winningCombinations.length; a++){
+				if(acontent[winningCombinations[a][0]]==symbol
+					&& acontent[winningCombinations[a][1]]==symbol
+					&& acontent[winningCombinations[a][2]]==symbol){					
+					if(symbol=='O'){return 1;}	
+					if(symbol=='X'){return 2;}			
+				}
+				}
+				return -1;
+			}
+		function playAgain(){
+			var y=confirm("PLAY AGAIN?");
+			if(y==true){
+				location.reload(true);
+			}
+			else{
+		}
+		}
+		
+	</script>
+</head>
+<body>
+<button type="button"  onclick="location.reload(true)">Restart</button>
+</body>
+</html>

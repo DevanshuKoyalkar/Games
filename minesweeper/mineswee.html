@@ -1,0 +1,213 @@
+<html>
+<head>
+	<title>minesweeper</title>
+	
+</head>
+<body>
+	<center>
+		<h1>minesweeper in html5</h1>
+		<p>this is a simple 10*10 implementation of minesweeper in html5</p>
+	</center>
+		<ul>
+			<li>Red-->bomb</li>
+			<li>Orange-->flagged events</li>
+			<li>Blue-->flagged bomb</li>
+		</ul>
+	<center>
+		<h3 id="bombs"></h3>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"> </script>
+		<script type="text/javascript">
+			var content;
+			var elecontent;
+			var countwin;
+			var bomb;//store bomb positions in an array
+			var bombdisplay;
+			
+			document.write('<table style="text-align:center"><tr>');
+			for (var x=0;x<=9;x++) {
+			document.write('<tr>');
+			for (var i=0;i<=9;i++)
+			{
+			document.write('<td id="'+(10*x+i) +'"style="'+'width: 30px; height: 30px;border:1px solid black;background-color:light-blue;"' +'oncontextmenu ="func2('+(10*x+i)+')"'+'onclick="func('+(10*x+i)+')">'+' </td>');
+			}
+			// onclick="func('+(10*x+i)+')">' 'ondblclick="func('+(10*x+i)+')"'
+			document.write('</tr>');
+			}
+			document.write('</table>');
+			
+		
+			window.onload=function (){
+				bombdisplay=10;
+				content = new Array();
+				countwin=0;
+				for(var i=0;i<=99;i++){
+				content[i]='';
+				}
+				elecontent = new Array();
+				bomb= new Array();
+				
+				for(var i=0;i<=9;i++){//storing all the bombs
+					var checking = true; // use this for the loop condition
+					while (checking){
+		    		comp = Math.floor(Math.random()*100);
+		    		if (content[comp] == '') {// check to see that the square is empty
+		       			checking = false; // if so, set the loop condition to false so the loop ends
+		    		}
+		    		}
+		    		content[comp]='b';	
+		    		bomb[i]=comp;		
+				}
+
+				for(var i=0;i<=99;i++){
+					elecontent[i]=value(i);
+					}
+				for(var i=0;i<=99;i++){//all td to black
+					// func(i);
+					var td = document.getElementById(i);
+					td.style.backgroundColor = 'black';
+				}
+				
+				bombdis();
+				}
+			function bombdis(){
+				document.getElementById('bombs').innerHTML="The no. of flags left is "+bombdisplay;
+			}
+
+			if (document.addEventListener) {//disable the right click option from the page
+		        document.addEventListener('contextmenu', function(e) {
+		            
+		            e.preventDefault();
+		        }, false);
+		    } 
+			function func2(x){				
+					var td = document.getElementById(x);
+					if(td.style.backgroundColor=='black')  {
+						td.style.backgroundColor = 'orange';
+						bombdisplay--;
+						for(var i=0;i<=9;i++){
+							if(bomb[i]==x) {
+								countwin++;
+							}
+						}
+					}
+					else if(td.style.backgroundColor=='white'){}
+					else {
+						if(td.style.backgroundColor = 'orange'){
+							for(var i=0;i<=9;i++){
+							if(bomb[i]==x) {
+								countwin--;
+							}
+						}
+						}
+						td.style.backgroundColor = 'black';
+						bombdisplay++;
+					}
+					bombdis();
+					if(countwin==10){
+						alert('YOU WON');
+						y=confirm("PLAY AGAIN?");
+						if(y==true){				
+						location.reload(true);
+						}
+					}
+				
+			}
+		
+		function value(x){
+				if (content[x]=='b') return 'b';
+				else{
+					var count=0;
+					if(content[x-1]=='b' && x-1>=0 && x-1<=99 && (x-1)%10!=9) count++;
+					if(content[x+1]=='b' && x+1>=0 && x+1<=99 &&  (x+1)%10!=0) count++;
+					if(content[x-10]=='b' && x-10>=0 && x-10<=99 ) count++;
+					if(content[x+10]=='b' && x+10>=0 && x+10<=99) count++;
+					if(content[x+10+1]=='b' && x+10+1>=0 && x+10+1<=99 && (x+10+1)%10!=0) count++;
+					if(content[x+10-1]=='b' && x+10-1>=0 && x+10-1<=99 && (x+10-1)%10!=9) count++;
+					if(content[x-10+1]=='b' && x-10+1>=0 && x-10+1<=99 && (x-10+1)%10!=0) count++;
+					if(content[x-10-1]=='b' && x-10-1>=0 && x-10-1<=99 && (x-10-1)%10!=9) count++;
+
+					if(count>0)return count;
+					else {
+						var blank='';
+						return blank;
+					}
+				}
+			}
+
+		function func(x){
+			var tdx= document.getElementById(x);
+			if(tdx.style.backgroundColor=='orange'){
+				bombdisplay++;
+				bombdis();
+			}
+			var val=value(x);
+			if(value(x)==''){
+				cleartiles(x);
+			}
+			else if(value(x)=='b'){				
+				var td = document.getElementById(x);
+				td.globalCompositeOperation = 'destination-over';
+				// td.style.backgroundColor = 'red';				
+				for(var i=0;i<bombdisplay;i++){
+					if(content[bomb[i]]=='b'){
+						var td = document.getElementById(bomb[i]);
+						if(td.style.backgroundColor !='orange') td.style.backgroundColor = 'red';
+						if(td.style.backgroundColor =='orange') td.style.backgroundColor = 'blue';
+					}
+				}
+				alert('GAME OVER');
+				y=confirm("PLAY AGAIN?");
+				if(y==true){				
+				location.reload(true);
+				}
+			}
+			else{
+				document.getElementById(x).innerHTML=val;
+				var td = document.getElementById(x);
+				td.style.backgroundColor = 'white';
+			}
+		}
+
+		function cleartiles(x){
+			//define an array wrt and store whether its acceseden
+
+			var val=value(x);
+			var td = document.getElementById(x);
+			// alert(val);
+			//out of bounds then do nothing
+			if(x<0 && x>99) {}
+			
+			
+			//if tile is bomb do nothing
+			else if(elecontent[x]=='b'){} 
+			
+			//if tile is empty..........reveal it ........call it on 8 surrounding squares
+			else if(elecontent[x]==''){
+				// alert('came here');
+				document.getElementById(x).innerHTML=val;
+				td.style.backgroundColor = 'white';
+				elecontent[x]='w';
+				if(x+1>=0 && x+1<=99 && (x+1)%10!=0 && elecontent[x+1]!='b' ) cleartiles(x+1);
+				if(x-1>=0 && x-1<=99 && (x-1)%10!=9 && elecontent[x-1]!='b')cleartiles(x-1);
+				if(x+10>=0 && x+10<=99 && elecontent[x+10]!='b')cleartiles(x+10);
+				if(x-10>=0 && x-10<=99 && elecontent[x-10]!='b')cleartiles(x-10);
+				if(x+10+1>=0 && x+10+1<=99 && (x+10+1)%10!=0 && elecontent[x+10-1]!='b')cleartiles(x+10+1);
+				if(x-10-1>=0 && x-10-1<=99 && (x-10-1)%10!=9 && elecontent[x-10-1]!='b')cleartiles(x-10-1);
+				if(x-10+1>=0 && x-10+1<=99 && (x-10+1)%10!=0 && elecontent[x-10+1]!='b')cleartiles(x-10+1);
+				if(x+10-1>=0 && x+10-1<=99 && (x+10-1)%10!=9 && elecontent[x+10-1]!='b')cleartiles(x+10-1);
+			}
+
+			//if the tile is a number reveal it without checking surrounding tiles
+			else{
+				document.getElementById(x).innerHTML=val;
+				td.style.backgroundColor = 'white';
+			}		
+			
+		}
+		</script>
+
+		<button type="button"  onclick="location.reload(true)">Restart</button>
+	</center>
+
+</body>
+</html>

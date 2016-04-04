@@ -1,0 +1,468 @@
+<html>
+<head>
+<title>Gomoku Single player</title>
+</head>
+<body>
+<center>
+<h1>Gomoku in Html5</h1>
+<p>Gomoku is an abstract strategy board game. Also called Gobang or Five in a Row, it is traditionally played with Go pieces (black and white stones) on a go board with 19x19 intersections;[1] however, because once placed, pieces are not moved or removed from the board; gomoku may also be played as a paper and pencil game. This game is known in several countries under different names.<br>
+</p>
+</center>
+<ul>Rules
+	<li>Computer plays first,its black,you are red</li>
+	<li>Your aim is to form a line with five boxes of same color</li>
+	<li>The one who does so first wins the game</li>
+	
+</ul>
+<center>
+<script type="text/javascript">
+	//global varibles
+	var painted;
+	var content;
+	var value;
+	var comp;
+
+	document.write('<table style="text-align:center"><tr>');
+	for (x=0;x<=9;x++) {
+	document.write('<tr>');
+	for (i=0;i<=9;i++)
+	{
+	document.write('<td id="'+(10*x+i) +'"style="width: 30px; height: 30px;border:1px solid black;background-color:light-blue;color:red" onclick="canvasClicked('+(10*x+i)+')">'+''+' </td>');
+	}
+	document.write('</tr>');
+	}
+	document.write('</table>');
+
+	window.onload=function(){
+		painted= new Array();
+		content= new Array();
+		value= new Array();
+		for(var i = 0;i <= 99; i++){
+			painted[i]=false;
+			content[i]='';
+			value[i]=0;
+		}
+		var rand=[23,27,32,37,43,45,56,51,63,66,76,73,83,86];
+		var ran=Math.floor(Math.random()*13);
+		value[rand[ran]]=5;
+		drawRandom();
+	}
+
+	function valueRemove(){
+		for(var i=0;i<100;i++){
+			if(painted[i]==true)value[i]=0;
+		}
+	}
+
+	function max(){
+		var maxval=value[0];
+		for(var i=0;i<100;i++){
+			if(value[i]>maxval){maxval=value[i];}
+		}
+		for(var i=0;i<100;i++){
+			if(value[i]==maxval)return i;
+		}
+	}
+
+	function valueAssign(x,symbol){
+		//should be independent of symbol and both  players should effect value
+		
+		//adjacent points assignment
+		for(var i=-2;i<3;i++){
+				if((x+i)<=(x-(x%10)+9) && (x+i)>=x-(x%10))
+					if(painted[x+i]==false)value[x+i]=value[x+i]+5-Math.abs(i);
+			}
+		
+		for(var i=-2;i<3 ;i++){
+			if((x+10*i)<=99 && (x+10*i)>=0)
+			if(painted[x+10*i]==false)value[x+10*i]=value[x+10*i]+5-Math.abs(i);
+		}
+
+		for(var i=-2;i<3;i++){
+			if((x+10*i+i)<=((x+10*i)-((x+10*i)%10)+9) && (x+10*i+i)>=(x+10*i)-((x+10*i)%10) && x+10*i+i>=0 && x+10*i+i<=99)
+			if(painted[x+10*i+i]==false)value[x+10*i+i]=value[x+10*i+i]+5-Math.abs(i);
+		}
+	
+		for(var i=-2;i<3;i++){
+			if((x+10*i-i)<=(x+10*i)-((x+10*i)%10)+9 && (x+10*i-i)>=(x+10*i)-((x+10*i)%10) && x+10*i-i>=0 && x+10*i-i<=99)
+			if(painted[x+10*i-i]==false)value[x+10*i-i]=value[x+10*i-i]+5-Math.abs(i);
+		}			
+		//two next checker
+			//two horizontal
+		if(content[x-1]==symbol && content[x]==symbol){
+			 if(painted[x+1]==false) if(content[x+1]==symbol) value[x+1]+=50;
+			 if(painted[x-2]==false) if(content[x-2]==symbol) value[x-2]+=50;
+		}
+		if(content[x]==symbol && content[x+1]==symbol){
+			if(painted[x-1]==false) if(content[x-1]=='')value[x-1]+=50;
+			if(painted[x-2]==false) if(content[x+2]=='')value[x+2]+=50;
+		}
+		//two vertical
+		if(content[x-10]==symbol && content[x]==symbol){
+			 if(content[x+10]==symbol)value[x+10]+=50;
+			 if(content[x-20]==symbol)value[x-20]+=50;
+		}
+		if(content[x]==symbol && content[x+10]==symbol){
+			if(content[x-10]=='')value[x-10]+=50;
+			if(content[x+20]=='')value[x+20]+=50;
+		}
+		//two c-cross
+		if(content[x-10-1]==symbol && content[x]==symbol){
+			 if(content[x+10+1]==symbol)value[x+10+1]+=50;
+			 if(content[x-20-2]==symbol)value[x-20-2]+=50;
+		}
+		if(content[x]==symbol && content[x+10+1]==symbol){
+			if(content[x-10-1]=='')value[x-10-1]+=50;
+			if(content[x+20+2]=='')value[x+20+2]+=50;
+		}
+		//two c1-cross
+		if(content[x-10+1]==symbol && content[x]==symbol){
+			 if(content[x+10-1]==symbol)value[x+10-1]+=50;
+			 if(content[x-20+2]==symbol)value[x-20+2]+=50;
+		}
+		if(content[x]==symbol && content[x+10-1]==symbol){
+			if(content[x-10+1]=='')value[x-10+1]+=50;
+			if(content[x+20-2]=='')value[x+20-2]+=50;
+		}
+		//three next checker
+		//three horizontal _XXX_ three cases thats it
+		if(content[x-2]==symbol && content[x-1]==symbol && content[x]==symbol){
+			if(content[x-3]=='') value[x-3]+=5000;
+			if(content[x+1]=='') value[x+1]+=5000;
+		}
+		if(content[x-1]==symbol && content[x]==symbol && content[x+1]==symbol){
+			if(content[x-2]=='')value[x-2]+=5000;
+			if(content[x+2]=='')value[x+2]+=5000;
+		}
+		if(content[x]==symbol && content[x+1]==symbol && content[x+2]==symbol){
+			if(content[x-1]=='')value[x-1]+=5000;
+			if(content[x+3]=='')value[x+3]+=5000;
+		}
+
+		//three vertical
+		if(content[x-20]==symbol && content[x-10]==symbol && content[x]==symbol){
+			if(content[x-30]=='') value[x-30]+=5000;
+			if(content[x+10]=='') value[x+10]+=5000;
+		}
+		if(content[x-10]==symbol && content[x]==symbol && content[x+10]==symbol){
+			if(content[x-20]=='')value[x-20]+=5000;
+			if(content[x+20]=='')value[x+20]+=5000;
+		}
+		if(content[x]==symbol && content[x+10]==symbol && content[x+20]==symbol){
+			if(content[x-10]=='')value[x-10]+=5000;
+			if(content[x+30]=='')value[x+30]+=5000;
+		}
+		//three c-cross
+		if(content[x-20-2]==symbol && content[x-10-1]==symbol && content[x]==symbol){
+			if(content[x-30-3]=='') value[x-30-3]+=5000;
+			if(content[x+10+1]=='') value[x+10+1]+=5000;
+		}
+		if(content[x-10-1]==symbol && content[x]==symbol && content[x+10+1]==symbol){
+			if(content[x-20-2]=='')value[x-20-2]+=5000;
+			if(content[x+20+2]=='')value[x+20+2]+=5000;
+		}
+		if(content[x]==symbol && content[x+10+1]==symbol && content[x+20+2]==symbol){
+			if(content[x-10-1]=='')value[x-10-1]+=5000;
+			if(content[x+30+3]=='')value[x+30+3]+=5000;
+		}
+		//three c1-cross
+		if(content[x-20+2]==symbol && content[x-10+1]==symbol && content[x]==symbol){
+			if(content[x-30+3]=='') value[x-30+3]+=5000;
+			if(content[x+10-1]=='') value[x+10-1]+=5000;
+		}
+		if(content[x-10+1]==symbol && content[x]==symbol && content[x+10-1]==symbol){
+			if(content[x-20+2]=='')value[x-20+2]+=5000;
+			if(content[x+20-2]=='')value[x+20-2]+=5000;
+		}
+		if(content[x]==symbol && content[x+10-1]==symbol && content[x+20-2]==symbol){
+			if(content[x-10+1]=='')value[x-10+1]+=5000;
+			if(content[x+30-3]=='')value[x+30-3]+=5000;
+		}
+		//four horizontal
+		//_XXXX_ four possible ways bitches
+		if(content[x-3]==symbol && content[x-2]==symbol && content[x-1]==symbol && content[x]==symbol){
+			if(content[x-4]=='')value[x-4]+=100000;
+			if(content[x+1]=='')value[x+1]+=100000;
+		}
+		if(content[x-2]==symbol && content[x-1]==symbol && content[x]==symbol && content[x+1]==symbol){
+			if(content[x-3]=='')value[x-3]+=100000;
+			if(content[x+2]=='')value[x+2]+=100000;
+		}
+		if(content[x-1]==symbol && content[x]==symbol && content[x+1]==symbol && content[x+2]==symbol){
+			if(content[x-2]=='')value[x-2]+=100000;
+			if(content[x+3]=='')value[x+3]+=100000;
+		}
+		if(content[x]==symbol && content[x+1]==symbol && content[x+2]==symbol && content[x+3]==symbol){
+			if(content[x-1]=='')value[x-1]+=100000;
+			if(content[x+4]=='')value[x+4]+=100000;
+		}
+		//the spot is in middle our current position can be anywhere XX_XX
+			if(content[x]==symbol && content[x+1]==symbol && content[x+2]=='' && content[x+3]==symbol && content[x+4]==symbol){
+			value[x+2]+=100000;
+		}
+		if(content[x-1]==symbol && content[x]==symbol && content[x+1]=='' && content[x+2]==symbol && content[x+3]==symbol){
+			value[x+1]+=100000;
+		}
+		if(content[x-3]==symbol && content[x-2]==symbol && content[x-1]=='' && content[x]==symbol && content[x+1]==symbol){
+			value[x-1]+=100000;
+		}
+		if(content[x-4]==symbol && content[x-3]==symbol && content[x-2]=='' && content[x-1]==symbol && content[x]==symbol){
+			value[x-2]+=100000;
+		}
+		//now what if the spot is like X_XXX four conditions
+		if(content[x]==symbol && content[x+1]=='' && content[x+2]==symbol && content[x+3]==symbol && content[x+4]==symbol){
+			value[x+1]+=100000;
+		}
+		if(content[x-2]==symbol && content[x-1]=='' && content[x]==symbol && content[x+1]==symbol && content[x+2]==symbol){
+			value[x-1]+=100000;
+		}
+		if(content[x-3]==symbol && content[x-2]=='' && content[x-1]==symbol && content[x]==symbol && content[x+1]==symbol){
+			value[x-2]+=100000;
+		}
+		if(content[x-4]==symbol && content[x-3]=='' && content[x-2]==symbol && content[x-1]==symbol && content[x]==symbol){
+			value[x-3]+=100000;
+		}
+		//four vertical
+		if(content[x-30]==symbol && content[x-20]==symbol && content[x-10]==symbol && content[x]==symbol){
+			if(content[x-40]=='')value[x-40]+=100000;
+			if(content[x+10]=='')value[x+10]+=100000;
+		}
+		if(content[x-20]==symbol && content[x-10]==symbol && content[x]==symbol && content[x+10]==symbol){
+			if(content[x-30]=='')value[x-30]+=100000;
+			if(content[x+20]=='')value[x+20]+=100000;
+		}
+		if(content[x-10]==symbol && content[x]==symbol && content[x+10]==symbol && content[x+20]==symbol){
+			if(content[x-20]=='')value[x-20]+=100000;
+			if(content[x+30]=='')value[x+30]+=100000;
+		}
+		if(content[x]==symbol && content[x+10]==symbol && content[x+20]==symbol && content[x+30]==symbol){
+			if(content[x-10]=='')value[x-10]+=100000;
+			if(content[x+40]=='')value[x+40]+=100000;
+		}
+		//the spot is in middle our current position can be anywhere XX_XX
+			if(content[x]==symbol && content[x+10]==symbol && content[x+20]=='' && content[x+30]==symbol && content[x+40]==symbol){
+			value[x+20]+=100000;
+		}
+		if(content[x-10]==symbol && content[x]==symbol && content[x+10]=='' && content[x+20]==symbol && content[x+30]==symbol){
+			value[x+10]+=100000;
+		}
+		if(content[x-30]==symbol && content[x-20]==symbol && content[x-10]=='' && content[x]==symbol && content[x+10]==symbol){
+			value[x-10]+=100000;
+		}
+		if(content[x-40]==symbol && content[x-30]==symbol && content[x-20]=='' && content[x-10]==symbol && content[x]==symbol){
+			value[x-20]+=100000;
+		}
+		//now what if the spot is like X_XXX four conditions
+		if(content[x]==symbol && content[x+10]=='' && content[x+20]==symbol && content[x+30]==symbol && content[x+40]==symbol){
+			value[x+10]+=100000;
+			
+		}
+		if(content[x-20]==symbol && content[x-10]=='' && content[x]==symbol && content[x+10]==symbol && content[x+20]==symbol){
+			value[x-10]+=100000;
+		}
+		if(content[x-30]==symbol && content[x-20]=='' && content[x-10]==symbol && content[x]==symbol && content[x+10]==symbol){
+			value[x-20]+=100000;
+		}
+		if(content[x-40]==symbol && content[x-30]=='' && content[x-20]==symbol && content[x-10]==symbol && content[x]==symbol){
+			value[x-30]+=100000;
+		}
+		//four c cross
+		if(content[x-30-3]==symbol && content[x-20-2]==symbol && content[x-10-1]==symbol && content[x]==symbol){
+			if(content[x+40+4-4]=='')value[x+40+4-4]+=100000;
+			if(content[x+10+1]=='')value[x+10+1]+=100000;
+		}
+		if(content[x-20-2]==symbol && content[x-10-1]==symbol && content[x]==symbol && content[x+10+1]==symbol){
+			if(content[x-30-3]=='')value[x-30-3]+=100000;
+			if(content[x+20+2]=='')value[x+20+2]+=100000;
+		}
+		if(content[x-10-1]==symbol && content[x]==symbol && content[x+10+1]==symbol && content[x+20+2]==symbol){
+			if(content[x-20-2]=='')value[x-20-2]+=100000;
+			if(content[x+30+3]=='')value[x+30+3]+=100000;
+		}
+		if(content[x]==symbol && content[x+10+1]==symbol && content[x+20+2]==symbol && content[x+30+3]==symbol){
+			if(content[x-10-1]=='')value[x-10-1]+=100000;
+			if(content[x+40+4]=='')value[x+40+4]+=100000;
+		}
+		//the spot is in middle our current position can be anywhere XX_XX
+			if(content[x]==symbol && content[x+10+1]==symbol && content[x+20+2]=='' && content[x+30+3]==symbol && content[x+40+4]==symbol){
+			value[x+20+2]+=100000;
+		}
+		if(content[x-10-1]==symbol && content[x]==symbol && content[x+10+1]=='' && content[x+20+2]==symbol && content[x+30+3]==symbol){
+			value[x+10+1]+=100000;
+		}
+		if(content[x-30-3]==symbol && content[x-20-2]==symbol && content[x-10-1]=='' && content[x]==symbol && content[x+10+1]==symbol){
+			value[x-10-1]+=100000;
+		}
+		if(content[x+40+4-4]==symbol && content[x-30-3]==symbol && content[x-20-2]=='' && content[x-10-1]==symbol && content[x]==symbol){
+			value[x-20-2]+=100000;
+		}
+		//now what if the spot is like X_XXX four conditions
+		if(content[x]==symbol && content[x+10+1]=='' && content[x+20+2]==symbol && content[x+30+3]==symbol && content[x+40+4]==symbol){
+			value[x+10+1]+=100000;
+
+		}
+		if(content[x-20-2]==symbol && content[x-10-1]=='' && content[x]==symbol && content[x+10+1]==symbol && content[x+20+2]==symbol){
+			value[x-10-1]+=100000;
+		}
+		if(content[x-30-3]==symbol && content[x-20-2]=='' && content[x-10-1]==symbol && content[x]==symbol && content[x+10+1]==symbol){
+			value[x-20-2]+=100000;
+		}
+		if(content[x+40+4-4]==symbol && content[x-30-3]=='' && content[x-20-2]==symbol && content[x-10-1]==symbol && content[x]==symbol){
+			value[x-30-3]+=100000;
+		}
+		//four c1 cross
+		if(content[x-30+3]==symbol && content[x-20+2]==symbol && content[x-10+1]==symbol && content[x]==symbol){
+			if(content[x-40+4]=='')value[x-40+4]+=100000;
+			if(content[x+10-1]=='')value[x+10-1]+=100000;
+		}
+		if(content[x-20+2]==symbol && content[x-10-1]==symbol && content[x]==symbol && content[x+10-1]==symbol){
+			if(content[x-30+3]=='')value[x-30+3]+=100000;
+			if(content[x+20-2]=='')value[x+20-2]+=100000;
+		}
+		if(content[x-10+1]==symbol && content[x]==symbol && content[x+10-1]==symbol && content[x+20-2]==symbol){
+			if(content[x-20+2]=='')value[x-20+2]+=100000;
+			if(content[x+30-3]=='')value[x+30-3]+=100000;
+		}
+		if(content[x]==symbol && content[x+10-1]==symbol && content[x+20-2]==symbol && content[x+30-3]==symbol){
+			if(content[x-10+1]=='')value[x-10+1]+=100000;
+			if(content[x+40-4]=='')value[x+40-4]+=100000;
+		}
+		//the spot is in middle our current position can be anywhere XX_XX
+			if(content[x]==symbol && content[x+10-1]==symbol && content[x+20-2]=='' && content[x+30-3]==symbol && content[x+40-4]==symbol){
+			value[x+20-2]+=100000;
+		}
+		if(content[x-10+1]==symbol && content[x]==symbol && content[x+10-1]=='' && content[x+20-2]==symbol && content[x+30-3]==symbol){
+			value[x+10-1]+=100000;
+		}
+		if(content[x-30+3]==symbol && content[x-20+2]==symbol && content[x-10+1]=='' && content[x]==symbol && content[x+10-1]==symbol){
+			value[x-10+1]+=100000;
+		}
+		if(content[x-40+4]==symbol && content[x-30+3]==symbol && content[x-20+2]=='' && content[x-10+1]==symbol && content[x]==symbol){
+			value[x-20+2]+=100000;
+		}
+		//now what if the spot is like X_XXX four conditions
+		if(content[x]==symbol && content[x+10-1]=='' && content[x+20-2]==symbol && content[x+30-3]==symbol && content[x+40-4]==symbol){
+			value[x+10-1]+=100000;
+			
+		}
+		if(content[x-20+2]==symbol && content[x-10+1]=='' && content[x]==symbol && content[x+10-1]==symbol && content[x+20-2]==symbol){
+			value[x-10+1]+=100000;
+		}
+		if(content[x-30+3]==symbol && content[x-20+2]=='' && content[x-10+1]==symbol && content[x]==symbol && content[x+10-1]==symbol){
+			value[x-20+2]+=100000;
+		}
+		if(content[x-40+4]==symbol && content[x-30+3]=='' && content[x-20+2]==symbol && content[x-10+1]==symbol && content[x]==symbol){
+			value[x-30+3]+=100000;
+		}
+			value[x]=0;
+	}
+
+	function drawRandom(){
+		var checking = true; // use this for the loop condition
+			while (checking){  		
+    		comp=max();
+    		if (value[comp]!=0 && content[comp] == '') {// check to see that the square is empty
+       			checking = false; // if so, set the loop condition to false so the loop ends
+    		}
+    		}
+    	// alert(value[comp]);
+    	content[comp]='O';
+    	painted[comp]=true;
+    	valueAssign(comp,'O');
+    	var td = document.getElementById(comp);
+		td.style.backgroundColor = '#000000';		
+		checkForWinners(comp,'O');
+	}
+	
+	function canvasClicked(x){		
+		if(painted[x]==false){						
+			var td = document.getElementById(x);
+			td.style.backgroundColor = '#FF0000';
+			//alert("hi");			
+			content[x]='X';
+			value[x]=0;
+			painted[x]=true;
+			valueAssign(x,'X');
+			checkForWinners(x,'X');
+			drawRandom();
+			valueRemove();	
+		}
+		else{
+			alert("the space is already occupied with your heart");
+		}
+	}
+	
+	function checkForWinners(x,symbol){
+		var arrh=[];
+		var arrv=[];
+		var arrc=[];
+		var arrc1=[];
+		//alert(arrh.length);
+			for(var i=-4;i<5;i++){
+				if((x+i)<=(x-(x%10)+9) && (x+i)>=x-(x%10))
+					arrh.push(content[x+i]);
+			}
+		
+			for(var i=-4;i<5;i++){
+				if((x+10*i)<=99 && (x+10*i)>=0)
+				arrv.push(content[x+10*i]);
+			}
+
+			for(var i=-4;i<5;i++){
+				if((x+10*i+i)<=((x+10*i)-((x+10*i)%10)+9) && (x+10*i+i)>=(x+10*i)-((x+10*i)%10) && x+10*i+i>=0 && x+10*i+i<=99)
+				arrc.push(content[x+10*i+i]);
+			}
+		
+			for(var i=-4;i<5;i++){
+				if((x+10*i-i)<=(x+10*i)-((x+10*i)%10)+9 && (x+10*i-i)>=(x+10*i)-((x+10*i)%10) && x+10*i-i>=0 && x+10*i-i<=99)
+				arrc1.push(content[x+10*i-i]);
+			}
+		//alert(arrv.length);
+		for(var i=0;i<arrh.length-3;i++){
+			
+			if(arrh[i]==arrh[i+1] && arrh[i+1]==arrh[i+2] && arrh[i+2]==arrh[i+3] && arrh[i+3]==arrh[i+4])
+				{playAgain(symbol)}
+		}
+		
+		for(var i=0;i<arrv.length-3;i++){
+			if(arrv[i]==arrv[i+1] && arrv[i+1]==arrv[i+2] && arrv[i+2]==arrv[i+3] && arrv[i+3]==arrv[i+4])
+				{playAgain(symbol)}
+		}
+		
+		for(var i=0;i<arrc.length-3;i++){
+			if(arrc[i]==arrc[i+1] && arrc[i+1]==arrc[i+2] && arrc[i+2]==arrc[i+3] && arrc[i+3]==arrc[i+4])
+				{playAgain(symbol)}
+		}
+		
+		for(var i=0;i<arrc1.length-3;i++){
+			if(arrc1[i]==arrc1[i+1] && arrc1[i+1]==arrc1[i+2] && arrc1[i+2]==arrc1[i+3] && arrc1[i+3]==arrc1[i+4])
+				{playAgain(symbol)}
+		}
+	}
+
+	function playAgain(symbol){
+		if(symbol=='X'){
+			alert('YOU WON');
+		}
+		else{
+			alert('YOU LOOSE')
+		}
+		y=confirm("PLAY AGAIN?");
+			if(y==true){
+				location.reload(true);
+			}
+			else{
+				alert("SO LONG,SUCKER!");
+		}
+	}
+
+</script>
+<br>
+<button type="button"  onclick="location.reload(true)">Restart</button>
+</center>
+<br><br><br>
+<p>
+&copy;  Devanshu Koyalkar and Nithish Reddy
+</p>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <title>Ultimate Tic-Tac-Toe</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"> </script>
+    <style type="text/css">
+    	body { text-align: center; }
+        div { display: inline-block; }
+        .grid { padding: 5px; border: solid 1px #300; }
+        .current-grid { background-color: #ff0; }
+        .button { background-color: #eee; width: 25px; height: 25px; margin: 5px;
+                  text-align: center; vertical-align: middle; font-size: 25px; }
+        .X-won { background-color: #FF0000; }
+        .O-won { background-color: #000000; }
+        .no-win { background-color: #ccc; }
+        .X-selected { color: #FF0000; }
+        .O-selected { color: #000000; }
+        #game { position: absolute; left: 0px; right: 0px; }
+    </style>
+    <script type="text/javascript">
+        var isXTurn = true;
+        var currentGrid = -1;
+    $(function() {
+    	$('body').append('<div id="game"></div>');
+            for (var i = 0; i < 9; i++) {
+                $('#game').append('<div class="grid" id="grid' + i + '"></div>');
+                if (i % 3 == 2) {
+                    $('#game').append('<br />');
+                }
+                for (var j = 0; j < 9; j++) {
+                    $('#grid' + i).append('<div class="button" id="button' + i + '-' + j + '"></div>');
+                    if (j % 3 == 2) {
+                        $('#grid' + i).append('<br />');
+                    }
+                }
+            }
+          $('.button').click(function(){
+          		var parent = $(this).parent;
+          		var me = isXTurn ? 'X' : 'O' ;
+          		
+          });
+
+        });
+    </script>
+</head>
+<body>
+    <h1>Ultimate Tic-Tac-Toe!</h1>
+    <p>made by devanshu koyalkar with the help of jQuery
+    <p><a href="#" onclick="resetGame()">Restart</a></p>
+</body>
+</html>

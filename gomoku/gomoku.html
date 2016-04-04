@@ -1,0 +1,116 @@
+<html>
+<head>
+<title>Two player Gomoku</title>
+</head>
+<body>
+<center>
+<h2>Two player Gomoku in Html5</h2>
+<p>This is a standard 19*19 implementation of Gomoku<br>
+Know about Gomoku <a href="http://en.wikipedia.org/wiki/Gomoku">here</a><br>
+Here the two players take Black and Red respectively.Black starts.
+</p>
+<script type="text/javascript">
+var k=1;
+var i;
+document.write('<table style="text-align:center"><tr>');
+for (x=0;x<=18;x++) {
+document.write('<tr>');
+for (i=0;i<=18;i++)
+{
+document.write('<td id="'+(19*x+i) +'"style="width: 25px; height: 25px;border:1px solid black;background-color:light-blue;" onclick="func('+(19*x+i)+')">'+''+' </td>');
+}
+document.write('</tr>');
+}
+document.write('</table>');
+document.write('<button type="button"  onclick="location.reload(true)">Restart</button>');
+
+function func(x){
+	if(document.getElementById(x).innerHTML!='X'&& document.getElementById(x).innerHTML!='O'){
+		if(k%2==0){
+			var w="X";			
+			var td = document.getElementById(x);
+			td.style.color='red';
+			document.getElementById(x).innerHTML=w;
+			td.style.backgroundColor = '#FF0000';
+			
+		}
+		else{
+			var w="O";
+			
+			var td = document.getElementById(x);
+			td.style.backgroundColor = '#000000';
+			document.getElementById(x).innerHTML=w;
+		}
+		k++;
+		check(x);
+	}
+	else{
+		alert('The place is already occupied by your heart');
+	}
+}
+	
+function check(x){
+	
+	var arrh=[];
+	var arrv=[];
+	var arrc=[];
+	var arrc1=[];
+	//alert(arrh.length);
+		for(var i=-4;i<5;i++){
+			if((x+i)<=(x-(x%19)+18) && (x+i)>=x-(x%19))
+				arrh.push(document.getElementById(x+i).innerHTML);
+		}
+	
+		for(var i=-4;i<5;i++){
+			if((x+19*i)<=360 && (x+19*i)>=0)
+			arrv.push(document.getElementById(x+19*i).innerHTML);
+		}
+
+		for(var i=-4;i<5;i++){
+			if((x+19*i+i)<=((x+19*i)-((x+19*i)%19)+18) && (x+19*i+i)>=(x+19*i)-((x+19*i)%19) && x+19*i+i>=0 && x+19*i+i<=360)
+			arrc.push(document.getElementById(x+19*i+i).innerHTML);
+		}
+	
+		for(var i=-4;i<5;i++){
+			if((x+19*i-i)<=(x+19*i)-((x+19*i)%19)+18 && (x+19*i-i)>=(x+19*i)-((x+19*i)%19) && x+19*i-i>=0 && x+19*i-i<=360)
+			arrc1.push(document.getElementById(x+19*i-i).innerHTML);
+		}
+	//alert(arrv.length);
+	for(var i=0;i<arrh.length-3;i++){
+		
+		if(arrh[i]==arrh[i+1] && arrh[i+1]==arrh[i+2] && arrh[i+2]==arrh[i+3] && arrh[i+3]==arrh[i+4])
+			win();
+	}
+	
+	for(var i=0;i<arrv.length-3;i++){
+		if(arrv[i]==arrv[i+1] && arrv[i+1]==arrv[i+2] && arrv[i+2]==arrv[i+3] && arrv[i+3]==arrv[i+4])
+			win();
+	}
+	
+	for(var i=0;i<arrc.length-3;i++){
+		if(arrc[i]==arrc[i+1] && arrc[i+1]==arrc[i+2] && arrc[i+2]==arrc[i+3] && arrc[i+3]==arrc[i+4])
+			win();
+	}
+	
+	for(var i=0;i<arrc1.length-3;i++){
+		if(arrc1[i]==arrc1[i+1] && arrc1[i+1]==arrc1[i+2] && arrc1[i+2]==arrc1[i+3] && arrc1[i+3]==arrc1[i+4])
+			win();
+	}
+	
+}
+function win(){
+	if(k%2==0) alert('Black Won');
+	else alert('Red Won');
+	y=confirm("PLAY AGAIN?");
+	if(y==true){
+		location.reload(true);
+	}	
+	else{
+	}
+}	
+
+</script>
+</center>
+</body>
+
+</html>

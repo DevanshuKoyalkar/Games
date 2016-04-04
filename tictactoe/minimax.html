@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Single Player with minimax</title>
+	<script type="text/javascript">
+	var Board={
+		X:0;
+		O:1;
+		win_combinations=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]];
+		state=[0,0,0,0,0,0,0,0,0];
+	}
+	Board.prototype=function(){
+		
+	}
+	//global variables
+	var painted;
+	var content;
+	var winningCombinations;
+	var comp;
+	var boxesFilled;
+	var w;
+	window.onload=function(){
+		painted= new Array();
+		content= new Array();
+		winningCombinations=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]];
+		boxesFilled=0;
+		for(var i = 0;i <= 8; i++){
+			painted[i]=false;
+			content[i]='';
+		}
+	}
+	function drawsymbol(id,symbol){
+		var c=document.getElementById(id);
+		var ctx=c.getContext("2d");
+		ctx.font='50px Georgia';
+		ctx.fillText(symbol,10,40);
+	}
+	function playAgain(){
+		y=confirm("PLAY AGAIN?");
+		if(y==true){
+			location.reload(true);
+		}
+		else{
+		}
+	}
+	function canvasClicked(w){
+		var theCanvas="canvas"+ w ;
+		if( painted[w-1] == false){
+			drawsymbol(theCanvas,'X');
+			content[w-1]='X';
+			painted[w-1]=true;
+			boxesFilled++;
+			if(checkForWinners('X')){
+				alert('You Won');
+				playAgain();
+			}
+			if(boxesFilled==9){
+				alert("ITs a draw");
+				playAgain();
+			}	
+		}
+		else{
+			alert("the space is already occupied with your heart");
+		}
+	}
+	function checker(symbol){
+		for(var a=0;a<winningCombinations.length;a++){
+			if(content[winningCombinations[a][0]]==symbol &&
+				content[winningCombinations[a][1]]==symbol &&
+				content[winningCombinations[a][2]]==symbol
+				){
+				return true;
+			}			
+		}
+	}
+
+	//main minimax starts here
+	function score(){
+		if(checker('X'))return -10;
+		else if(checker('O'))return 10;
+		return 0;
+	}
+	function max(){//max 
+
+	}
+	function min(){
+
+	}
+	</script>
+</head>
+<body>
+<center>
+	<div>
+		<h1>Single player tictactoe with minimax</h1>
+		<div id="box" >
+			<input  id="O" type="button" value="let the computer play first" onclick="drawCorner()	">
+			<br><br><br>
+			<canvas id = "canvas1"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(1)"></canvas>
+			<canvas id = "canvas2"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(2)"></canvas>
+			<canvas id = "canvas3"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(3)"></canvas><br/>
+			<canvas id = "canvas4"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(4)"></canvas>
+			<canvas id = "canvas5"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(5)"></canvas>
+			<canvas id = "canvas6"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(6)"></canvas><br/>
+			<canvas id = "canvas7"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(7)"></canvas>
+			<canvas id = "canvas8"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(8)"></canvas>
+			<canvas id = "canvas9"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(9)"></canvas><br/>
+		
+		<button type="button"  onclick="location.reload(true)">Restart</button>
+		</div>
+		</center>
+
+</body>
+</html>
