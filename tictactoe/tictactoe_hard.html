@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Single Player Level:Hard</title>
+		<script type="text/javascript" src="js/hard.js"></script>
+	</head>
+	<body>
+		<center>
+			<h1>Single player tictactoe with a AI-----level:hard</h1>
+			<div id="box" >
+				<input  id="O" type="button" value="Play First" onclick="drawCorner()">
+				<input  id="1" type="button" value="Play Second" onclick="drawCorner()">
+				<input  id="2" type="button" value="Random" onclick="drawCorner()">
+				<br><br><br>
+				<canvas id = "canvas1"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(1)"></canvas>
+				<canvas id = "canvas2"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(2)"></canvas>
+				<canvas id = "canvas3"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(3)"></canvas><br/>
+				<canvas id = "canvas4"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(4)"></canvas>
+				<canvas id = "canvas5"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(5)"></canvas>
+				<canvas id = "canvas6"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(6)"></canvas><br/>
+				<canvas id = "canvas7"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(7)"></canvas>
+				<canvas id = "canvas8"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(8)"></canvas>
+				<canvas id = "canvas9"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(9)"></canvas><br/>
+
+				<button type="button"  onclick="location.reload(true)">Restart</button>
+			</div>
+		</center>
+			<div>
+				<ol>Priority of playing is decided as follows
+					<!-- Some parts are yet to be added -->
+					<li><b>Win</b><br>
+					If you have two in a row, you must place a third to get three in a row.</li>
+					<li><b>Block:</b><br>
+					If the opponent has two in a row, you must play the third to block the opponent.</li>
+					<li><b>Fork:</b><br>
+					Create an opportunity where you have two threats to win (two non-blocked lines of 2).</li>
+					<li><b>Blocking an opponent's fork:</b><br>
+					If there is a configuration where the opponent can fork, you must block that fork.</li>
+					<li><b>Center:</b><br>
+					You play the center if open.</li>
+					<li><b>Opposite corner:</b><br>
+					If the opponent is in the corner, you play the opposite corner.</li>
+					<li><b>Empty corner:</b><br>
+					You play in a corner square.</li>
+					<li><b>Empty side:</b><br>
+					You play in a middle square on any of the 4 sides.</li>
+				</ol>
+			</div>
+	</body>
+</html>

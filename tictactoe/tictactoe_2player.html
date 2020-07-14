@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Two Player Tic-Tac-Toe</title>
+		<script type="text/javascript" src="js/2player.js"></script>
+	</head>
+
+	<body>
+		<center>
+			<h2>Two player tictactoe</h2>
+			Player 1 choose what you want to start with(default is X)<br>
+			<br>
+			<input  id="O" type="button" value="Start with O " onclick="changeturn(1);">
+			<br><br><br>
+			<div id="box">
+				<canvas id = "canvas1"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(1)"></canvas>
+				<canvas id = "canvas2"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(2)"></canvas>
+				<canvas id = "canvas3"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(3)"></canvas>
+				<br/>
+				<canvas id = "canvas4"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(4)"></canvas>
+				<canvas id = "canvas5"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(5)"></canvas>
+				<canvas id = "canvas6"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(6)"></canvas>
+				<br/>
+				<canvas id = "canvas7"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(7)"></canvas>
+				<canvas id = "canvas8"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(8)"></canvas>
+				<canvas id = "canvas9"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(9)"></canvas>
+				<br/>
+			</div>
+			<button type="button"  onclick="location.reload(true)">Restart</button>
+		</center>
+	</body>
+</html>
