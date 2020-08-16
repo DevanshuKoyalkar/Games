@@ -17,16 +17,20 @@ Priority of playing is decided as follows:-
 5.Center:\
 -You play the center if open.
 
-6.Opposite corner:\
--If the opponent is in the corner, you play the opposite corner.
-
-7.Empty corner:\
+6.Empty corner:\
 -You play in a corner square.
 
-8.Empty side:\
+7.Empty side:\
 -You play in a middle square on any of the 4 sides.
 
 
 
 ###Resources
-1.https://en.wikipedia.org/wiki/Tic-tac-toe#Strategy
+1. Strategy : https://en.wikipedia.org/wiki/Tic-tac-toe#Strategy
+2. JavaScript changing CSS : https://www.w3schools.com/js/js_htmldom_css.asp
+3. CSS button: https://www.w3schools.com/css/css3_buttons.asp
+4. CSS Grid:   https://www.w3schools.com/css/css_grid.asp
+
+
+
+

@@ -20,22 +20,42 @@ window.onload=function(){
     content= new Array();
     winningCombinations=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]];
     boxesFilled=0;
-    for(var i = 0;i <= 8; i++){
+    for(var i = 0;i < ; i++){
         painted[i]=false;
         content[i]='';
     }
 }
 
+//Decide if First Player/ Second Player / Random
+function drawCorner(){
+    for(var i = 0;i < 9; i++){
+        painted[i]=false;
+        content[i]='';
+        var comp=parseInt(i)	;
+        var theCanvas="canvas"+ comp;
+        drawsymbol(theCanvas,'');
+    }
+    var corner=[1,3,7,9];
+    var rand=Math.floor(Math.random()*4);
+    comp=corner[rand];
+    var theCanvas="canvas"+ comp ;
+    drawsymbol(theCanvas,'O');
+    // document.getElementById(theCanvas).style.backgroundColor='blue';
+    content[comp-1]='O';
+    painted[comp-1]=true;
+    boxesFilled++;
+}
+
 //Called when someone clicks on Canvas
 function canvasClicked(w){
     var currCanvas="canvas"+ w ;
-    if( painted[w-1] == false ){
+    if( painted[w] == false ){
         drawsymbol(currCanvas,'X');
-        content[w-1]='X';
-        painted[w-1]=true;
+        content[w]='X';
+        painted[w]=true;
         boxesFilled++;
-        checkForWinners(content[w-1]);
-        if((checker(content[w-1]))==false && boxesFilled!=9){
+        checkForWinners(content[w]);
+        if((checker(content[w]))==false && boxesFilled!=9){
             drawRandom(w);
         }
         else if(boxesFilled==9){
@@ -127,32 +147,9 @@ function isFork(x,symbol){
     }
 }
 
-function drawCorner(){
-    painted= new Array();
-    content= new Array();
-    winningCombinations=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6],[0,3,6],[1,4,7],[2,5,8]];
-    boxesFilled=0;
-    for(var i = 1;i <= 9; i++){
-        painted[i-1]=false;
-        content[i-1]='';
-        var comp=parseInt(i)	;
-        var theCanvas="canvas"+ comp;
-        drawsymbol(theCanvas,'');
-        // document.getElementById(theCanvas).style.backgroundColor='white';
-    }
-    var corner=[1,3,7,9];
-    var rand=Math.floor(Math.random()*4);
-    comp=corner[rand];
-    var theCanvas="canvas"+ comp ;
-    drawsymbol(theCanvas,'O');
-    // document.getElementById(theCanvas).style.backgroundColor='blue';
-    content[comp-1]='O';
-    painted[comp-1]=true;
-    boxesFilled++;
-}
 
 function drawRandom(w){
-    //see if we are winning and put that in bitch
+    //see if we are winning
     if(formLine('O')!= -1){
         comp=formLine('O')+1;
     }
